@@ -13,11 +13,12 @@ import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } fro
 import { Context } from '../context/Context';
 
 export default function MainTable() {
-	const { searchData } = useContext(Context);
+	const { searchData, changeError } = useContext(Context);
 	const columns = ['name', 'origin', 'status', 'species', 'gender'];
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(0);
+	const [pageCount, setPageCount] = useState(1);
 	const [characters, setCharacters] = useState('');
 	const [findChar, setFindChar] = useState('');
 
@@ -26,12 +27,15 @@ export default function MainTable() {
 			const { data } = await axios.get(
 				`https://rickandmortyapi.com/api/character?page=${page}&name=${findChar}`
 			);
-			console.log(findChar);
-			console.log('in cb', data.results);
+			console.log('in cb', data);
 			setCharacters(data.results);
 			setIsLoading(false);
+			setPageCount(data.info.pages);
 		} catch (e) {
-			console.log(e);
+			changeError(e.response.data.error);
+			console.log(e.response.data.error);
+			console.log(e.response.status);
+			console.log(e.response.headers);
 		}
 	}, [findChar, page]);
 
@@ -107,7 +111,7 @@ export default function MainTable() {
 			</TableContainer>
 			<Stack spacing={2} style={{ display: 'inline-block' }}>
 				<Pagination
-					count={10}
+					count={pageCount}
 					page={page}
 					onChange={handleChangePage}
 					variant="outlined"
