@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-
+import AppContextWrapper from './context/AppContextWrapper';
 import MainTable from './components/MainTable';
 import NavMenu from './components/NavMenu';
 
@@ -21,16 +21,21 @@ function App() {
 	};
 
 	return (
-		<ThemeProvider theme={theme}>
-			<div className="App">
-				<NavMenu isOpen={show} clickProps={clickHandler} />
-				<Button onClick={clickHandler} variant="contained" className="topMenuTriggerButton">
-					Navigation Menu
-				</Button>
+		<AppContextWrapper>
+			<ThemeProvider theme={theme}>
+				<div className="App">
+					<NavMenu isOpen={show} clickProps={clickHandler} />
+					<Button
+						onClick={clickHandler}
+						variant="contained"
+						className="topMenuTriggerButton">
+						Navigation Menu
+					</Button>
 
-				<MainTable className="someClassName" />
-			</div>
-		</ThemeProvider>
+					<MainTable className="someClassName" />
+				</div>
+			</ThemeProvider>
+		</AppContextWrapper>
 	);
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
@@ -10,31 +10,38 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } from '@mui/material';
 
+import { Context } from '../context/Context';
+
 export default function MainTable() {
+	const { searchData } = useContext(Context);
+	const columns = ['name', 'origin', 'status', 'species', 'gender'];
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(0);
-
 	const [characters, setCharacters] = useState('');
-	// const [columns, setColumns] = useState('');
-	const columns = ['name', 'origin', 'status', 'species', 'gender'];
+	const [findChar, setFindChar] = useState('');
 
 	const fetchCharacters = useCallback(async () => {
 		try {
 			const { data } = await axios.get(
-				`https://rickandmortyapi.com/api/character?page=${page}`
+				`https://rickandmortyapi.com/api/character?page=${page}&name=${findChar}`
 			);
+			console.log(findChar);
+			console.log('in cb', data.results);
 			setCharacters(data.results);
-			// setColumns(Object.keys(data.results[0]));
 			setIsLoading(false);
-			console.log(data);
 		} catch (e) {
 			console.log(e);
 		}
-	}, [page]);
+	}, [findChar, page]);
 
 	useEffect(() => {
 		fetchCharacters();
 	}, [fetchCharacters]);
+
+	useEffect(() => {
+		setFindChar(searchData);
+	}, [searchData]);
 
 	const tableHeaderFormat = () => {
 		if (!isLoading) {
