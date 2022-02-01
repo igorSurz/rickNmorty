@@ -5,7 +5,7 @@ export default function AppContextWrapper(props) {
 	const [searchData, setData] = useState('');
 	const [error, setError] = useState('');
 	const [gender, setGender] = useState('');
-
+	const [view, setView] = useState('table');
 	const [status, setStatus] = useState('');
 
 	function changeData(data) {
@@ -21,6 +21,9 @@ export default function AppContextWrapper(props) {
 	function changeStatus(data) {
 		setStatus(data);
 	}
+	function changeView(data) {
+		setView(data);
+	}
 
 	return (
 		<Context.Provider
@@ -32,7 +35,9 @@ export default function AppContextWrapper(props) {
 				gender: gender,
 				changeGender: changeGender,
 				status: status,
-				changeStatus: changeStatus
+				changeStatus: changeStatus,
+				view: view,
+				changeView: changeView
 			}}>
 			{props.children}
 		</Context.Provider>

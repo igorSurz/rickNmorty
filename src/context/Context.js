@@ -5,8 +5,10 @@ export const Context = createContext({
 	error: '',
 	gender: '',
 	status: '',
+	view: 'table',
 	changeError: () => {},
 	changeData: () => {},
 	changeGender: () => {},
-	changeStatus: () => {}
+	changeStatus: () => {},
+	changeView: () => {}
 });

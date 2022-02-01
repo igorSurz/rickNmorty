@@ -8,13 +8,14 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } from '@mui/material';
 
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } from '@mui/material';
 import ModalCard from './ModalCard';
+import CardView from './CardView';
 import { Context } from '../context/Context';
 
 export default function MainTable() {
-	const { searchData, changeError, gender, status } = useContext(Context);
+	const { searchData, changeError, gender, status, view } = useContext(Context);
 	const columns = ['name', 'origin', 'status', 'species', 'gender'];
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -119,8 +120,8 @@ export default function MainTable() {
 		setPage(newPage);
 	};
 
-	return (
-		<Paper sx={{ width: '100%' }}>
+	const tableView = () => {
+		return (
 			<TableContainer sx={{ height: '93vh' }}>
 				<Table stickyHeader aria-label="sticky table">
 					<TableHead>
@@ -129,6 +130,16 @@ export default function MainTable() {
 					<TableBody>{tableCharacterFormat()}</TableBody>
 				</Table>
 			</TableContainer>
+		);
+	};
+
+	return (
+		<Paper sx={{ width: '100%' }}>
+			{view === 'table' ? (
+				tableView()
+			) : (
+				<CardView characters={characters} isLoading={isLoading} />
+			)}
 			<Stack spacing={2} style={{ display: 'inline-block' }}>
 				<Pagination
 					count={pageCount}

@@ -66,14 +66,23 @@ export default function NavMenu(props) {
 		contextData.changeStatus('');
 	};
 
+	const changeViewHandler = () => {
+		if (contextData.view === 'table') {
+			contextData.changeView('cards');
+		}
+		if (contextData.view === 'cards') {
+			contextData.changeView('table');
+		}
+	};
+
 	const selectRendered = () => {
 		return (
 			<div style={{ paddingRight: '20px', paddingLeft: '20px' }}>
-				<Grid id="top-row" container spacing={24}>
+				<Grid id="top-row" container spacing={8}>
 					<Grid item xs={3}>
 						{searchRender()}
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={2}>
 						<Box sx={{ minWidth: '120px' }}>
 							<FormControl fullWidth={false}>
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -89,7 +98,7 @@ export default function NavMenu(props) {
 							</FormControl>
 						</Box>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={2}>
 						<Box sx={{ minWidth: '120px' }}>
 							<FormControl fullWidth={false}>
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -105,13 +114,23 @@ export default function NavMenu(props) {
 							</FormControl>
 						</Box>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={2}>
 						<Box sx={{ minWidth: '120px' }}>
 							<Button
 								onClick={resetHandler}
 								variant="contained"
 								className="topMenuTriggerButton">
 								Reset All
+							</Button>
+						</Box>
+					</Grid>
+					<Grid item xs={2}>
+						<Box sx={{ minWidth: '180px' }}>
+							<Button
+								onClick={changeViewHandler}
+								variant="contained"
+								className="topMenuTriggerButton">
+								Toggle View
 							</Button>
 						</Box>
 					</Grid>
@@ -156,7 +175,7 @@ export default function NavMenu(props) {
 	const list = anchor => (
 		<Box sx={{ width: anchor === 'top' }} role="presentation">
 			<List onClick={toggleDrawer}>
-				{['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+				{['Some Future', 'Links to Pages'].map((text, index) => (
 					<ListItem button key={text}>
 						<ListItemIcon>
 							<InboxIcon />

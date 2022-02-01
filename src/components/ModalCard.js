@@ -106,7 +106,10 @@ export default function ModalCard(props) {
 									<Typography gutterBottom variant="h5" component="div">
 										{props.data.name}
 									</Typography>
-									<Typography variant="body2" color="text.secondary">
+									<Typography
+										component={'span'}
+										variant="body2"
+										color="text.secondary">
 										{cardFooterFormat()}
 									</Typography>
 								</CardContent>
