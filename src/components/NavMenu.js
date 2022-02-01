@@ -12,13 +12,23 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Input from '@mui/material/Input';
 
 import { Context } from '../context/Context';
-import { Popover, Typography } from '@mui/material';
+import {
+	Button,
+	FormControl,
+	Grid,
+	InputLabel,
+	NativeSelect,
+	Popover,
+	Typography
+} from '@mui/material';
 
 export default function NavMenu(props) {
 	const [searchValue, setSearchValue] = useState('');
 	const contextData = useContext(Context);
 	const [open, setOpen] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [gender, setGender] = useState('');
+	const [status, setStatus] = useState('');
 
 	useEffect(() => {
 		contextData.changeData(searchValue);
@@ -28,13 +38,86 @@ export default function NavMenu(props) {
 		props.clickProps();
 	};
 
+	const handleClose = () => {
+		setOpen(false);
+	};
+
 	const onChangeHandler = e => {
 		setSearchValue(e.target.value);
 		setAnchorEl(e.target);
 	};
 
-	const handleClose = () => {
-		setOpen(false);
+	const onGenderChange = e => {
+		setGender(e.target.value);
+		contextData.changeGender(e.target.value);
+	};
+
+	const onStatusChange = e => {
+		setStatus(e.target.value);
+		contextData.changeStatus(e.target.value);
+	};
+
+	const resetHandler = () => {
+		setSearchValue('');
+		setAnchorEl('');
+		setGender('');
+		contextData.changeGender('');
+		setStatus('');
+		contextData.changeStatus('');
+	};
+
+	const selectRendered = () => {
+		return (
+			<div style={{ paddingRight: '20px', paddingLeft: '20px' }}>
+				<Grid id="top-row" container spacing={24}>
+					<Grid item xs={3}>
+						{searchRender()}
+					</Grid>
+					<Grid item xs={3}>
+						<Box sx={{ minWidth: '120px' }}>
+							<FormControl fullWidth={false}>
+								<InputLabel variant="standard" htmlFor="uncontrolled-native">
+									Gender
+								</InputLabel>
+								<NativeSelect value={gender} onChange={onGenderChange}>
+									<option aria-label="None" value="" />
+									<option value="female">Female</option>
+									<option value="male">Male</option>
+									<option value="genderless">Genderless</option>
+									<option value="unknown">Unknown</option>
+								</NativeSelect>
+							</FormControl>
+						</Box>
+					</Grid>
+					<Grid item xs={3}>
+						<Box sx={{ minWidth: '120px' }}>
+							<FormControl fullWidth={false}>
+								<InputLabel variant="standard" htmlFor="uncontrolled-native">
+									Status
+								</InputLabel>
+								<NativeSelect value={status} onChange={onStatusChange}>
+									<option aria-label="None" value="" />
+
+									<option value="alive">Alive</option>
+									<option value="dead">Dead</option>
+									<option value="unknown">Unknown</option>
+								</NativeSelect>
+							</FormControl>
+						</Box>
+					</Grid>
+					<Grid item xs={3}>
+						<Box sx={{ minWidth: '120px' }}>
+							<Button
+								onClick={resetHandler}
+								variant="contained"
+								className="topMenuTriggerButton">
+								Reset All
+							</Button>
+						</Box>
+					</Grid>
+				</Grid>
+			</div>
+		);
 	};
 
 	const popoverHandler = () => {
@@ -55,6 +138,21 @@ export default function NavMenu(props) {
 		}
 	};
 
+	const searchRender = () => {
+		return (
+			<>
+				Search:{' '}
+				<DebounceInput
+					value={searchValue}
+					element={Input}
+					minLength={2}
+					debounceTimeout={300}
+					onChange={onChangeHandler}
+				/>
+			</>
+		);
+	};
+
 	const list = anchor => (
 		<Box sx={{ width: anchor === 'top' }} role="presentation">
 			<List onClick={toggleDrawer}>
@@ -68,16 +166,10 @@ export default function NavMenu(props) {
 				))}
 			</List>
 			<Divider />
-			<List>
-				Search:{' '}
-				<DebounceInput
-					element={Input}
-					minLength={2}
-					debounceTimeout={300}
-					onChange={onChangeHandler}
-				/>
-			</List>
+			<List></List>
 			{popoverHandler()}
+
+			<List>{selectRendered()}</List>
 		</Box>
 	);
 
