@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } from '@mui/material';
 
+import ModalCard from './ModalCard';
 import { Context } from '../context/Context';
 
 export default function MainTable() {
@@ -23,6 +24,7 @@ export default function MainTable() {
 	const [characterQuery, setCharacterQuery] = useState('');
 	const [genderQuery, setGenderQuery] = useState('');
 	const [statusQuery, setStatusQuery] = useState('');
+	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', trIsOpen: false });
 
 	const fetchCharacters = useCallback(async () => {
 		try {
@@ -58,11 +60,20 @@ export default function MainTable() {
 		}
 	};
 
+	const onModalOpen = () => {
+		setTableRowOpen(prevState => ({ ...prevState, isOpen: false }));
+	};
+
 	const tableCharacterFormat = () => {
 		if (!isLoading) {
 			return characters.map(character => {
 				return (
-					<TableRow hover role="checkbox" tabIndex={-1} key={character.id}>
+					<TableRow
+						hover
+						role="checkbox"
+						tabIndex={-1}
+						key={character.id}
+						onClick={() => setTableRowOpen({ trId: character.id, isOpen: true })}>
 						{columns.map((column, i) => {
 							const value = character[column];
 							return (
@@ -70,6 +81,14 @@ export default function MainTable() {
 									key={i.toString()}
 									align="center"
 									style={{ padding: '0px' }}>
+									{tableRowOpen.trId === character.id ? (
+										<ModalCard
+											data={character}
+											isOpen={tableRowOpen.isOpen}
+											changeOpen={onModalOpen}
+										/>
+									) : null}
+
 									{column === 'name' ? (
 										<ListItem>
 											<ListItemAvatar>
