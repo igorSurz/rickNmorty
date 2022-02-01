@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
 import {
@@ -8,6 +9,7 @@ import {
 	ClickAwayListener,
 	Typography
 } from '@mui/material';
+import axios from 'axios';
 
 const StyledModal = styled(ModalUnstyled)`
 	position: fixed;
@@ -22,8 +24,8 @@ const StyledModal = styled(ModalUnstyled)`
 `;
 
 const modal = {
-	height: '100%',
-	width: '100%',
+	height: 500,
+	width: 400,
 	boxShadow: 5
 };
 
@@ -39,8 +41,46 @@ const Backdrop = styled('div')`
 `;
 
 export default function ModalCard(props) {
+	const [episodes, setEpisodes] = useState('');
+	const [loading, setLoading] = useState(false);
+
+	const fetchEpisodes = useCallback(async linkArr => {
+		try {
+			const { data } = await axios.get(linkArr);
+
+			setEpisodes(prevState => [...prevState, data.episode]);
+		} catch (e) {
+			console.log(e);
+		}
+	}, []);
+
+	useEffect(() => {
+		let first = props.data.episode;
+		let link = first[first.length - 1];
+
+		fetchEpisodes(props.data.episode[0]);
+		if (props.data.episode.length > 1) {
+			fetchEpisodes(link);
+		}
+		setLoading(true);
+	}, [fetchEpisodes, props.data.episode]);
+
 	const handleClose = () => {
 		props.changeOpen();
+	};
+
+	let cardFooterFormat = () => {
+		if (loading && episodes.length) {
+			return (
+				<>
+					<p>The first episode the character appeared in {episodes[0]}</p>
+
+					{episodes.length > 1 && (
+						<p>The last episode the character appeared in {episodes[1]}</p>
+					)}
+				</>
+			);
+		}
 	};
 
 	return (
@@ -57,9 +97,9 @@ export default function ModalCard(props) {
 							<CardActionArea>
 								<CardMedia
 									component="img"
-									height="140"
-									image="/static/images/cards/contemplative-reptile.jpg"
-									alt="green iguana"
+									height="350"
+									image={props.data.image}
+									alt={props.data.name}
 								/>
 
 								<CardContent>
@@ -67,8 +107,7 @@ export default function ModalCard(props) {
 										{props.data.name}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">
-										Lizards are a widespread group of reptiles, with over 6,000
-										species, ranging across all continents except Antarctica
+										{cardFooterFormat()}
 									</Typography>
 								</CardContent>
 							</CardActionArea>
