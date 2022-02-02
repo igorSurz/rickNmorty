@@ -2,13 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
-import {
-	Chart,
-	ArgumentAxis,
-	ValueAxis,
-	BarSeries,
-	Legend
-} from '@devexpress/dx-react-chart-material-ui';
+import { Chart, ArgumentAxis, ValueAxis, BarSeries } from '@devexpress/dx-react-chart-material-ui';
 import { ValueScale } from '@devexpress/dx-react-chart';
 
 export default function Demo() {
@@ -28,7 +22,7 @@ export default function Demo() {
 	const fetchEpisodes = useCallback(async () => {
 		try {
 			const { data } = await axios.get(`https://rickandmortyapi.com/api/episode`);
-			console.log('in chart', data);
+
 			const mapped = data.results.map(el => ({
 				episode: el.episode,
 				char: el.characters.length

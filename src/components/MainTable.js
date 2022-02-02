@@ -32,7 +32,7 @@ export default function MainTable() {
 			const { data } = await axios.get(
 				`https://rickandmortyapi.com/api/character?page=${page}&name=${characterQuery}&gender=${genderQuery}&status=${statusQuery}`
 			);
-			console.log('in cb', data);
+
 			setCharacters(data.results);
 			setIsLoading(false);
 			setPageCount(data.info.pages);
