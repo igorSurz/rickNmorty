@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Button from '@mui/material/Button';
 import AppContextWrapper from './context/AppContextWrapper';
 import MainTable from './components/MainTable';
 import NavMenu from './components/NavMenu';
+import ChartView from './components/ChartView';
 
 import './App.css';
 
@@ -24,15 +27,19 @@ function App() {
 		<AppContextWrapper>
 			<ThemeProvider theme={theme}>
 				<div className="App">
-					<NavMenu isOpen={show} clickProps={clickHandler} />
 					<Button
 						onClick={clickHandler}
 						variant="contained"
 						className="topMenuTriggerButton">
 						Navigation Menu
 					</Button>
-
-					<MainTable className="someClassName" />
+					<BrowserRouter>
+						<NavMenu isOpen={show} clickProps={clickHandler} />
+						<Routes>
+							<Route path="/" element={<MainTable className="someClassName" />} />
+							<Route path="/chart" element={<ChartView />} />
+						</Routes>
+					</BrowserRouter>
 				</div>
 			</ThemeProvider>
 		</AppContextWrapper>

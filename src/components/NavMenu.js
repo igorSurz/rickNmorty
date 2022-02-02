@@ -5,11 +5,11 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Input from '@mui/material/Input';
+import { Link, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+
+import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
+import AppsIcon from '@mui/icons-material/Apps';
 
 import { Context } from '../context/Context';
 import {
@@ -77,8 +77,14 @@ export default function NavMenu(props) {
 
 	const selectRendered = () => {
 		return (
-			<div style={{ paddingRight: '20px', paddingLeft: '20px' }}>
-				<Grid id="top-row" container spacing={8}>
+			<div>
+				<Grid
+					id="top-row"
+					container
+					spacing={2}
+					direction="row"
+					justifyContent="space-around"
+					alignItems="flex-end">
 					<Grid item xs={3}>
 						{searchRender()}
 					</Grid>
@@ -160,6 +166,7 @@ export default function NavMenu(props) {
 	const searchRender = () => {
 		return (
 			<>
+				{popoverHandler()}
 				Search:{' '}
 				<DebounceInput
 					value={searchValue}
@@ -172,24 +179,50 @@ export default function NavMenu(props) {
 		);
 	};
 
-	const list = anchor => (
-		<Box sx={{ width: anchor === 'top' }} role="presentation">
-			<List onClick={toggleDrawer}>
-				{['Some Future', 'Links to Pages'].map((text, index) => (
-					<ListItem button key={text}>
-						<ListItemIcon>
-							<InboxIcon />
-						</ListItemIcon>
-						<ListItemText primary={text} />
-					</ListItem>
-				))}
-			</List>
+	const list = () => (
+		<Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+			<nav aria-label="main mailbox folders">
+				<List onClick={toggleDrawer}>
+					<Link href="/" color="inherit" underline="none">
+						<ListItem disablePadding>
+							<ListItemButton>
+								<ListItemIcon>
+									<AppsIcon />
+								</ListItemIcon>
+								<ListItemText primary="Main Table" />
+							</ListItemButton>
+						</ListItem>
+					</Link>
+					<Link href="/chart" color="inherit" underline="none">
+						<ListItem disablePadding>
+							<ListItemButton>
+								<ListItemIcon>
+									<AlignVerticalBottomIcon />
+								</ListItemIcon>
+								<ListItemText primary="Chart" />
+							</ListItemButton>
+						</ListItem>
+					</Link>
+				</List>
+			</nav>
 			<Divider />
-			<List></List>
-			{popoverHandler()}
-
-			<List>{selectRendered()}</List>
+			<nav aria-label="secondary mailbox folders">
+				<List>{selectRendered()}</List>
+			</nav>
 		</Box>
+
+		// 	<List >
+		//
+		// 		<MuiLink to="/" underline="none">
+		// 			Main Table
+		// 		</MuiLink>
+		// 	</List>
+		// 	<Divider />
+		// 	<List></List>
+		//
+
+		//
+		// </Box>
 	);
 
 	return (
