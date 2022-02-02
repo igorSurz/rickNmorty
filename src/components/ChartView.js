@@ -63,8 +63,6 @@ export default function Demo() {
 							argumentField="episode"
 							scaleName="char"
 						/>
-
-						<Legend />
 					</Chart>
 				</Paper>
 			)}

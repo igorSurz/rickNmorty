@@ -77,19 +77,25 @@ export default function NavMenu(props) {
 
 	const selectRendered = () => {
 		return (
-			<div>
+			<Box>
 				<Grid
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'center',
+						alignItems: 'center'
+					}}
 					id="top-row"
 					container
 					spacing={2}
 					direction="row"
 					justifyContent="space-around"
 					alignItems="flex-end">
-					<Grid item xs={3}>
+					<Grid item xs={12}>
 						{searchRender()}
 					</Grid>
-					<Grid item xs={2}>
-						<Box sx={{ minWidth: '120px' }}>
+					<Grid item xs={12}>
+						<Box sx={{ minWidth: '180px' }}>
 							<FormControl fullWidth={false}>
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
 									Gender
@@ -104,7 +110,7 @@ export default function NavMenu(props) {
 							</FormControl>
 						</Box>
 					</Grid>
-					<Grid item xs={2}>
+					<Grid item xs={12}>
 						<Box sx={{ minWidth: '120px' }}>
 							<FormControl fullWidth={false}>
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -120,7 +126,7 @@ export default function NavMenu(props) {
 							</FormControl>
 						</Box>
 					</Grid>
-					<Grid item xs={2}>
+					<Grid item xs={12}>
 						<Box sx={{ minWidth: '120px' }}>
 							<Button
 								onClick={resetHandler}
@@ -130,7 +136,7 @@ export default function NavMenu(props) {
 							</Button>
 						</Box>
 					</Grid>
-					<Grid item xs={2}>
+					<Grid item xs={12}>
 						<Box sx={{ minWidth: '180px' }}>
 							<Button
 								onClick={changeViewHandler}
@@ -141,7 +147,7 @@ export default function NavMenu(props) {
 						</Box>
 					</Grid>
 				</Grid>
-			</div>
+			</Box>
 		);
 	};
 
