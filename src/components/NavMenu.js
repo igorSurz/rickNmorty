@@ -25,21 +25,17 @@ import {
 export default function NavMenu(props) {
 	const [searchValue, setSearchValue] = useState('');
 	const contextData = useContext(Context);
-	const [open, setOpen] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [gender, setGender] = useState('');
 	const [status, setStatus] = useState('');
 
 	useEffect(() => {
 		contextData.changeData(searchValue);
+		console.log('context', contextData);
 	}, [contextData, searchValue]);
 
 	const toggleDrawer = () => {
 		props.clickProps();
-	};
-
-	const handleClose = () => {
-		setOpen(false);
 	};
 
 	const onChangeHandler = e => {
@@ -59,7 +55,6 @@ export default function NavMenu(props) {
 
 	const resetHandler = () => {
 		setSearchValue('');
-		setAnchorEl('');
 		setGender('');
 		contextData.changeGender('');
 		setStatus('');
@@ -81,9 +76,11 @@ export default function NavMenu(props) {
 				<Grid
 					sx={{
 						display: 'flex',
-						flexDirection: 'column',
+						flexWrap: 'wrap',
+						width: '50%',
 						justifyContent: 'center',
-						alignItems: 'center'
+						alignItems: 'center',
+						marginLeft: '27%'
 					}}
 					id="top-row"
 					container
@@ -151,28 +148,9 @@ export default function NavMenu(props) {
 		);
 	};
 
-	const popoverHandler = () => {
-		if (contextData.error) {
-			return (
-				<Popover
-					id="simple-popover"
-					open={open}
-					anchorEl={anchorEl}
-					onClose={handleClose}
-					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'center'
-					}}>
-					<Typography sx={{ p: 2 }}>{contextData.error}</Typography>
-				</Popover>
-			);
-		}
-	};
-
 	const searchRender = () => {
 		return (
 			<>
-				{popoverHandler()}
 				Search:{' '}
 				<DebounceInput
 					value={searchValue}
@@ -181,6 +159,18 @@ export default function NavMenu(props) {
 					debounceTimeout={300}
 					onChange={onChangeHandler}
 				/>
+				<Popover
+					id="simple-popover"
+					disableAutoFocus={true}
+					disableEnforceFocus={true}
+					open={Boolean(contextData.error)}
+					anchorEl={anchorEl}
+					anchorOrigin={{
+						vertical: 'bottom',
+						horizontal: 'center'
+					}}>
+					<Typography sx={{ p: 2 }}>{contextData.error}</Typography>
+				</Popover>
 			</>
 		);
 	};
@@ -216,19 +206,6 @@ export default function NavMenu(props) {
 				<List>{selectRendered()}</List>
 			</nav>
 		</Box>
-
-		// 	<List >
-		//
-		// 		<MuiLink to="/" underline="none">
-		// 			Main Table
-		// 		</MuiLink>
-		// 	</List>
-		// 	<Divider />
-		// 	<List></List>
-		//
-
-		//
-		// </Box>
 	);
 
 	return (

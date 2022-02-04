@@ -9,14 +9,7 @@ export default function Demo() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const [state, setState] = useState({
-		data: [
-			{ episode: 'Jan', char: 700 },
-			{ episode: 'Feb', char: 100 },
-			{ episode: 'March', char: 30 },
-			{ episode: 'April', char: 107 },
-			{ episode: 'May', char: 95 },
-			{ episode: 'June', char: 150 }
-		]
+		data: []
 	});
 
 	const fetchEpisodes = useCallback(async () => {
@@ -29,9 +22,7 @@ export default function Demo() {
 			}));
 
 			setState({ data: mapped });
-		} catch (e) {
-			console.log(e.response.data.error);
-		}
+		} catch (e) {}
 	}, []);
 
 	useEffect(() => {

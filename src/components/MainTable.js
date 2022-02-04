@@ -36,6 +36,7 @@ export default function MainTable() {
 			setCharacters(data.results);
 			setIsLoading(false);
 			setPageCount(data.info.pages);
+			changeError(null);
 		} catch (e) {
 			changeError(e.response.data.error);
 		}

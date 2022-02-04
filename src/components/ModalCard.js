@@ -49,9 +49,7 @@ export default function ModalCard(props) {
 			const { data } = await axios.get(linkArr);
 
 			setEpisodes(prevState => [...prevState, data.episode]);
-		} catch (e) {
-			console.log(e);
-		}
+		} catch (e) {}
 	}, []);
 
 	useEffect(() => {
