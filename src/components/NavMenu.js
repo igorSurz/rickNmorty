@@ -31,7 +31,6 @@ export default function NavMenu(props) {
 
 	useEffect(() => {
 		contextData.changeData(searchValue);
-		console.log('context', contextData);
 	}, [contextData, searchValue]);
 
 	const toggleDrawer = () => {
@@ -59,6 +58,7 @@ export default function NavMenu(props) {
 		contextData.changeGender('');
 		setStatus('');
 		contextData.changeStatus('');
+		contextData.changeError(null);
 	};
 
 	const changeViewHandler = () => {
@@ -148,12 +148,17 @@ export default function NavMenu(props) {
 		);
 	};
 
+	const onClosePopover = () => {
+		contextData.changeError(null);
+		setSearchValue('');
+	};
+
 	const searchRender = () => {
 		return (
 			<>
-				Search:{' '}
 				<DebounceInput
 					value={searchValue}
+					placeholder="Search Character"
 					element={Input}
 					minLength={2}
 					debounceTimeout={300}
@@ -164,6 +169,7 @@ export default function NavMenu(props) {
 					disableAutoFocus={true}
 					disableEnforceFocus={true}
 					open={Boolean(contextData.error)}
+					onClose={onClosePopover}
 					anchorEl={anchorEl}
 					anchorOrigin={{
 						vertical: 'bottom',
