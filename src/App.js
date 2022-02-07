@@ -91,6 +91,9 @@ function App() {
 			);
 		}
 	};
+	const propPageCount = () => {
+		setPageCount(allChars.length);
+	};
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -99,7 +102,11 @@ function App() {
 					Navigation Menu
 				</Button>
 				<BrowserRouter>
-					<NavMenu isOpen={show} clickProps={clickHandler} />
+					<NavMenu
+						isOpen={show}
+						clickProps={clickHandler}
+						propPageCount={propPageCount}
+					/>
 					<Routes>
 						<Route
 							path="/"
@@ -108,7 +115,6 @@ function App() {
 									<MainTable
 										isLoading={isLoading}
 										characters={propsCondition()}
-										pageCount={pageCount}
 										className="someClassName"
 									/>
 								) : (

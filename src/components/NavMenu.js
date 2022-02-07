@@ -55,10 +55,12 @@ export default function NavMenu(props) {
 	const resetHandler = () => {
 		setSearchValue('');
 		setGender('');
-		contextData.changeGender('');
 		setStatus('');
+		contextData.changeData('');
+		contextData.changeGender('');
 		contextData.changeStatus('');
 		contextData.changeError(null);
+		props.propPageCount();
 	};
 
 	const changeViewHandler = () => {
