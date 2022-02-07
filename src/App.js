@@ -58,7 +58,6 @@ function App() {
 					setCharacters(data.results);
 					setPageCount(data.info.pages);
 					changeError(null);
-					console.log('search', searchData);
 				} catch (e) {
 					changeError(e.response.data.error);
 				}
