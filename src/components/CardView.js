@@ -12,7 +12,7 @@ import TableContainer from '@mui/material/TableContainer';
 export default function CardView(props) {
 	const cardRender = (character, index) => {
 		return (
-			<Grid item>
+			<Grid item key={index}>
 				<Card sx={{ maxWidth: 345 }}>
 					<CardActionArea>
 						<CardMedia

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
 import { Chart, ArgumentAxis, ValueAxis, BarSeries } from '@devexpress/dx-react-chart-material-ui';
-import { ValueScale } from '@devexpress/dx-react-chart';
+import { ValueScale, Animation, HoverState, EventTracker } from '@devexpress/dx-react-chart';
 
 export default function Demo() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -13,20 +13,26 @@ export default function Demo() {
 	});
 
 	useEffect(() => {
-		const fetchEpisodes = async () => {
-			try {
-				const { data } = await axios.get(`https://rickandmortyapi.com/api/episode`);
+		const fetchAllCharacters = async () => {
+			let all = Array(3)
+				.fill()
+				.map((e, i) => axios.get(`https://rickandmortyapi.com/api/episode?page=${i + 1}`));
 
-				const mapped = data.results.map(el => ({
-					episode: el.episode,
-					char: el.characters.length
-				}));
+			let data = await Promise.all(all);
 
-				setState({ data: mapped });
-			} catch (e) {}
+			const mergedDataArray = data
+				.map(element => element.data.results)
+				.reduce((result, current) => result.concat(current), []);
+
+			const mapped = mergedDataArray.map(el => ({
+				episode: el.episode,
+				char: el.characters.length
+			}));
+
+			setState({ data: mapped });
+			setIsLoading(false);
 		};
-		fetchEpisodes();
-		setIsLoading(false);
+		fetchAllCharacters();
 	}, []);
 
 	const { data: chartData } = state;
@@ -35,13 +41,13 @@ export default function Demo() {
 		if (!isLoading) {
 			return (
 				<>
-					<Paper sx={{ height: '97vh' }}>
-						<Chart data={chartData}>
+					<Paper sx={{ height: '98vh', padding: '20px' }}>
+						<Chart height={700} data={chartData} rotated>
 							<ValueScale name="char" />
 							<ValueScale name="total" />
 
 							<ArgumentAxis />
-							<ValueAxis scaleName="char" showGrid={true} showLine showTicks />
+							<ValueAxis scaleName="char" showGrid={true} />
 
 							<BarSeries
 								name="Episodes"
@@ -49,6 +55,9 @@ export default function Demo() {
 								argumentField="episode"
 								scaleName="char"
 							/>
+							<EventTracker />
+							<HoverState />
+							<Animation />
 						</Chart>
 					</Paper>
 				</>

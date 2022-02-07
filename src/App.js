@@ -38,7 +38,6 @@ function App() {
 				.map((e, i) =>
 					axios.get(`https://rickandmortyapi.com/api/character?page=${i + 1}`)
 				);
-			console.log('lalalalal');
 
 			let data = await Promise.all(all);
 
@@ -126,7 +125,11 @@ function App() {
 						<Route path="/chart" element={<ChartView />} />
 					</Routes>
 				</BrowserRouter>
-				<Stack spacing={2} style={{ display: 'inline-block' }}>
+				<Stack
+					spacing={2}
+					style={{
+						display: window.location.pathname === '/chart' ? 'none' : 'inline-block'
+					}}>
 					<Pagination
 						count={pageCount}
 						page={page}
