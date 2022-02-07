@@ -1,13 +1,16 @@
-import { useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
-import AppContextWrapper from './context/AppContextWrapper';
 import MainTable from './components/MainTable';
 import NavMenu from './components/NavMenu';
 import ChartView from './components/ChartView';
+import { Pagination, Stack } from '@mui/material';
 
+import { Context } from './context/Context';
+import CardView from './components/CardView';
 import './App.css';
 
 const theme = createTheme({
@@ -17,32 +20,117 @@ const theme = createTheme({
 });
 
 function App() {
+	const { searchData, changeError, gender, status, view } = useContext(Context);
+
 	const [show, setShow] = useState(false);
 
+	// =================================================================
+	const [isLoading, setIsLoading] = useState(true);
+	const [pageCount, setPageCount] = useState(1);
+	const [allChars, setAllChars] = useState('');
+	const [characters, setCharacters] = useState('');
+	const [page, setPage] = useState(1);
+
+	useEffect(() => {
+		const fetchAllCharacters = async () => {
+			let all = Array(42)
+				.fill()
+				.map((e, i) =>
+					axios.get(`https://rickandmortyapi.com/api/character?page=${i + 1}`)
+				);
+			console.log('lalalalal');
+
+			let data = await Promise.all(all);
+
+			setAllChars(data);
+			setPageCount(42);
+		};
+		fetchAllCharacters();
+	}, []);
+
+	useEffect(() => {
+		const fetchCharacters = async () => {
+			if (searchData || gender || status) {
+				try {
+					const { data } = await axios.get(
+						`https://rickandmortyapi.com/api/character?page=${page}&name=${searchData}&gender=${gender}&status=${status}`
+					);
+
+					setCharacters(data.results);
+					setPageCount(data.info.pages);
+					changeError(null);
+					console.log('search', searchData);
+				} catch (e) {
+					changeError(e.response.data.error);
+				}
+			}
+		};
+		fetchCharacters();
+		setIsLoading(false);
+	}, [changeError, gender, page, searchData, status]);
+
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
+	};
+	//================================================================
+
 	const clickHandler = () => {
+		setPage(1);
 		setShow(prevState => !prevState);
 	};
 
+	const propsCondition = () => {
+		if (searchData || gender || status) {
+			return characters;
+		} else {
+			return (
+				allChars.length &&
+				allChars.map((e, i) => (i === page - 1 ? Object.values(e.data.results) : null))[
+					page - 1
+				]
+			);
+		}
+	};
+
 	return (
-		<AppContextWrapper>
-			<ThemeProvider theme={theme}>
-				<div className="App">
-					<Button
-						onClick={clickHandler}
-						variant="contained"
-						className="topMenuTriggerButton">
-						Navigation Menu
-					</Button>
-					<BrowserRouter>
-						<NavMenu isOpen={show} clickProps={clickHandler} />
-						<Routes>
-							<Route path="/" element={<MainTable className="someClassName" />} />
-							<Route path="/chart" element={<ChartView />} />
-						</Routes>
-					</BrowserRouter>
-				</div>
-			</ThemeProvider>
-		</AppContextWrapper>
+		<ThemeProvider theme={theme}>
+			<div className="App">
+				<Button onClick={clickHandler} variant="contained" className="topMenuTriggerButton">
+					Navigation Menu
+				</Button>
+				<BrowserRouter>
+					<NavMenu isOpen={show} clickProps={clickHandler} />
+					<Routes>
+						<Route
+							path="/"
+							element={
+								view === 'table' ? (
+									<MainTable
+										isLoading={isLoading}
+										characters={propsCondition()}
+										pageCount={pageCount}
+										className="someClassName"
+									/>
+								) : (
+									<CardView characters={propsCondition()} isLoading={isLoading} />
+								)
+							}
+						/>
+
+						<Route path="/chart" element={<ChartView />} />
+					</Routes>
+				</BrowserRouter>
+				<Stack spacing={2} style={{ display: 'inline-block' }}>
+					<Pagination
+						count={pageCount}
+						page={page}
+						onChange={handleChangePage}
+						variant="outlined"
+						shape="rounded"
+					/>
+				</Stack>
+			</div>
+		</ThemeProvider>
 	);
 }
 

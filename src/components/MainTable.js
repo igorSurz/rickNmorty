@@ -1,50 +1,28 @@
-import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import {
+	Avatar,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow
+} from '@mui/material';
 
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Pagination, Stack } from '@mui/material';
 import ModalCard from './ModalCard';
-import CardView from './CardView';
-import { Context } from '../context/Context';
 
-export default function MainTable() {
-	const { searchData, changeError, gender, status, view } = useContext(Context);
+export default function MainTable(props) {
 	const columns = ['name', 'origin', 'status', 'species', 'gender'];
-
-	const [isLoading, setIsLoading] = useState(true);
-	const [page, setPage] = useState(1);
-	const [pageCount, setPageCount] = useState(1);
-	const [characters, setCharacters] = useState('');
 
 	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', trIsOpen: false });
 
-	useEffect(() => {
-		const fetchCharacters = async () => {
-			try {
-				const { data } = await axios.get(
-					`https://rickandmortyapi.com/api/character?page=${page}&name=${searchData}&gender=${gender}&status=${status}`
-				);
-
-				setCharacters(data.results);
-				setIsLoading(false);
-				setPageCount(data.info.pages);
-				changeError(null);
-			} catch (e) {
-				changeError(e.response.data.error);
-			}
-		};
-		fetchCharacters();
-	}, [changeError, gender, page, searchData, status]);
-
 	const tableHeaderFormat = () => {
-		if (!isLoading) {
+		if (!props.isLoading && props.characters) {
 			return columns.map((column, i) => (
 				<TableCell key={i} align="center" style={{ textTransform: 'capitalize' }}>
 					{column}
@@ -58,8 +36,8 @@ export default function MainTable() {
 	};
 
 	const tableCharacterFormat = () => {
-		if (!isLoading) {
-			return characters.map(character => {
+		if (!props.isLoading && props.characters) {
+			return props.characters.map(character => {
 				return (
 					<TableRow
 						hover
@@ -108,10 +86,7 @@ export default function MainTable() {
 		}
 	};
 
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-
+	//memo
 	const tableView = () => {
 		return (
 			<TableContainer sx={{ height: '93vh' }}>
@@ -125,22 +100,5 @@ export default function MainTable() {
 		);
 	};
 
-	return (
-		<Paper sx={{ width: '100%' }}>
-			{view === 'table' ? (
-				tableView()
-			) : (
-				<CardView characters={characters} isLoading={isLoading} />
-			)}
-			<Stack spacing={2} style={{ display: 'inline-block' }}>
-				<Pagination
-					count={pageCount}
-					page={page}
-					onChange={handleChangePage}
-					variant="outlined"
-					shape="rounded"
-				/>
-			</Stack>
-		</Paper>
-	);
+	return <Paper sx={{ width: '100%' }}>{tableView()}</Paper>;
 }
