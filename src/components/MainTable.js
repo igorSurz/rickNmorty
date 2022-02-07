@@ -32,7 +32,8 @@ export default function MainTable(props) {
 	};
 
 	const onModalOpen = () => {
-		setTableRowOpen(prevState => ({ ...prevState, isOpen: false }));
+		setTableRowOpen({ isOpen: false });
+		console.log(222);
 	};
 
 	const tableCharacterFormat = () => {

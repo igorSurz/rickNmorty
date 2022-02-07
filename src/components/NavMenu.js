@@ -6,7 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import Input from '@mui/material/Input';
-import { Link, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import AppsIcon from '@mui/icons-material/Apps';
@@ -21,6 +21,7 @@ import {
 	Popover,
 	Typography
 } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 export default function NavMenu(props) {
 	const [searchValue, setSearchValue] = useState('');
@@ -187,7 +188,7 @@ export default function NavMenu(props) {
 		<Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
 			<nav aria-label="main mailbox folders">
 				<List onClick={toggleDrawer}>
-					<Link href="/" color="inherit" underline="none">
+					<NavLink style={{ textDecoration: 'none', color: 'white' }} to="/">
 						<ListItem disablePadding>
 							<ListItemButton>
 								<ListItemIcon>
@@ -196,8 +197,9 @@ export default function NavMenu(props) {
 								<ListItemText primary="Main Table" />
 							</ListItemButton>
 						</ListItem>
-					</Link>
-					<Link href="/chart" color="inherit" underline="none">
+					</NavLink>
+
+					<NavLink style={{ textDecoration: 'none', color: 'white' }} to="/chart">
 						<ListItem disablePadding>
 							<ListItemButton>
 								<ListItemIcon>
@@ -206,7 +208,7 @@ export default function NavMenu(props) {
 								<ListItemText primary="Chart" />
 							</ListItemButton>
 						</ListItem>
-					</Link>
+					</NavLink>
 				</List>
 			</nav>
 			<Divider />
