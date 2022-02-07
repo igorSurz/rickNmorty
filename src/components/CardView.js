@@ -48,7 +48,7 @@ export default function CardView(props) {
 	return (
 		<TableContainer sx={{ height: '93vh' }}>
 			<Box sx={{ flexGrow: 1 }}>
-				<Grid container spacing={{ xs: 4, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+				<Grid container spacing={{ xs: 3, md: 3 }} columns={{ xs: 4, sm: 9, md: 12 }}>
 					{!props.isLoading &&
 						props.characters.map((character, index) => cardRender(character, index))}
 				</Grid>
