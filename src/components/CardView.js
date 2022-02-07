@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { CardActionArea } from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
 
 export default function CardView(props) {
 	const cardRender = (character, index) => {
@@ -45,11 +46,13 @@ export default function CardView(props) {
 	}));
 
 	return (
-		<Box sx={{ flexGrow: 1 }}>
-			<Grid container spacing={{ xs: 4, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-				{!props.isLoading &&
-					props.characters.map((character, index) => cardRender(character, index))}
-			</Grid>
-		</Box>
+		<TableContainer sx={{ height: '93vh' }}>
+			<Box sx={{ flexGrow: 1 }}>
+				<Grid container spacing={{ xs: 4, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+					{!props.isLoading &&
+						props.characters.map((character, index) => cardRender(character, index))}
+				</Grid>
+			</Box>
+		</TableContainer>
 	);
 }
