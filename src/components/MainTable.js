@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
@@ -19,30 +19,29 @@ export default function MainTable() {
 	const columns = ['name', 'origin', 'status', 'species', 'gender'];
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [page, setPage] = useState(0);
+	const [page, setPage] = useState(1);
 	const [pageCount, setPageCount] = useState(1);
 	const [characters, setCharacters] = useState('');
 
 	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', trIsOpen: false });
 
-	const fetchCharacters = useCallback(async () => {
-		try {
-			const { data } = await axios.get(
-				`https://rickandmortyapi.com/api/character?page=${page}&name=${searchData}&gender=${gender}&status=${status}`
-			);
-
-			setCharacters(data.results);
-			setIsLoading(false);
-			setPageCount(data.info.pages);
-			changeError(null);
-		} catch (e) {
-			changeError(e.response.data.error);
-		}
-	}, [changeError, gender, page, searchData, status]);
-
 	useEffect(() => {
+		const fetchCharacters = async () => {
+			try {
+				const { data } = await axios.get(
+					`https://rickandmortyapi.com/api/character?page=${page}&name=${searchData}&gender=${gender}&status=${status}`
+				);
+
+				setCharacters(data.results);
+				setIsLoading(false);
+				setPageCount(data.info.pages);
+				changeError(null);
+			} catch (e) {
+				changeError(e.response.data.error);
+			}
+		};
 		fetchCharacters();
-	}, [fetchCharacters]);
+	}, [changeError, gender, page, searchData, status]);
 
 	const tableHeaderFormat = () => {
 		if (!isLoading) {
