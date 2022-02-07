@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
@@ -12,45 +12,49 @@ export default function Demo() {
 		data: []
 	});
 
-	const fetchEpisodes = useCallback(async () => {
-		try {
-			const { data } = await axios.get(`https://rickandmortyapi.com/api/episode`);
-
-			const mapped = data.results.map(el => ({
-				episode: el.episode,
-				char: el.characters.length
-			}));
-
-			setState({ data: mapped });
-		} catch (e) {}
-	}, []);
-
 	useEffect(() => {
+		const fetchEpisodes = async () => {
+			try {
+				const { data } = await axios.get(`https://rickandmortyapi.com/api/episode`);
+
+				const mapped = data.results.map(el => ({
+					episode: el.episode,
+					char: el.characters.length
+				}));
+
+				setState({ data: mapped });
+			} catch (e) {}
+		};
 		fetchEpisodes();
 		setIsLoading(false);
 	}, []);
 
 	const { data: chartData } = state;
-	return (
-		<>
-			{!isLoading && (
-				<Paper sx={{ height: '97vh' }}>
-					<Chart data={chartData}>
-						<ValueScale name="char" />
-						<ValueScale name="total" />
 
-						<ArgumentAxis />
-						<ValueAxis scaleName="char" showGrid={true} showLine showTicks />
+	const chartRender = () => {
+		if (!isLoading) {
+			return (
+				<>
+					<Paper sx={{ height: '97vh' }}>
+						<Chart data={chartData}>
+							<ValueScale name="char" />
+							<ValueScale name="total" />
 
-						<BarSeries
-							name="Episodes"
-							valueField="char"
-							argumentField="episode"
-							scaleName="char"
-						/>
-					</Chart>
-				</Paper>
-			)}
-		</>
-	);
+							<ArgumentAxis />
+							<ValueAxis scaleName="char" showGrid={true} showLine showTicks />
+
+							<BarSeries
+								name="Episodes"
+								valueField="char"
+								argumentField="episode"
+								scaleName="char"
+							/>
+						</Chart>
+					</Paper>
+				</>
+			);
+		}
+	};
+
+	return <>{chartRender()}</>;
 }
