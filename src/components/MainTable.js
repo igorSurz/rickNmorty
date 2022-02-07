@@ -22,15 +22,13 @@ export default function MainTable() {
 	const [page, setPage] = useState(0);
 	const [pageCount, setPageCount] = useState(1);
 	const [characters, setCharacters] = useState('');
-	const [characterQuery, setCharacterQuery] = useState('');
-	const [genderQuery, setGenderQuery] = useState('');
-	const [statusQuery, setStatusQuery] = useState('');
+
 	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', trIsOpen: false });
 
 	const fetchCharacters = useCallback(async () => {
 		try {
 			const { data } = await axios.get(
-				`https://rickandmortyapi.com/api/character?page=${page}&name=${characterQuery}&gender=${genderQuery}&status=${statusQuery}`
+				`https://rickandmortyapi.com/api/character?page=${page}&name=${searchData}&gender=${gender}&status=${status}`
 			);
 
 			setCharacters(data.results);
@@ -40,17 +38,11 @@ export default function MainTable() {
 		} catch (e) {
 			changeError(e.response.data.error);
 		}
-	}, [changeError, characterQuery, genderQuery, page, statusQuery]);
+	}, [changeError, gender, page, searchData, status]);
 
 	useEffect(() => {
 		fetchCharacters();
 	}, [fetchCharacters]);
-
-	useEffect(() => {
-		setCharacterQuery(searchData);
-		setStatusQuery(status);
-		setGenderQuery(gender);
-	}, [gender, searchData, status]);
 
 	const tableHeaderFormat = () => {
 		if (!isLoading) {
