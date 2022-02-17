@@ -2,15 +2,14 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Pagination, Stack, Button } from '@mui/material';
 
-import Button from '@mui/material/Button';
 import MainTable from './components/MainTable';
 import NavMenu from './components/NavMenu';
 import ChartView from './components/ChartView';
-import { Pagination, Stack } from '@mui/material';
+import CardView from './components/CardView';
 
 import { Context } from './context/Context';
-import CardView from './components/CardView';
 import './App.css';
 
 const theme = createTheme({
@@ -42,7 +41,7 @@ function App() {
 			let data = await Promise.all(all);
 
 			setAllChars(data);
-			setPageCount(42);
+			setPageCount(all.length);
 		};
 		fetchAllCharacters();
 	}, []);
@@ -57,7 +56,6 @@ function App() {
 
 					setCharacters(data.results);
 					setPageCount(data.info.pages);
-					changeError(null);
 				} catch (e) {
 					changeError(e.response.data.error);
 				}
@@ -65,12 +63,12 @@ function App() {
 		};
 		fetchCharacters();
 		setIsLoading(false);
-	}, [changeError, gender, page, searchData, status]);
+		// eslint-disable-next-line
+	}, [gender, page, searchData, status]);
 
-	const handleChangePage = (event, newPage) => {
+	const handleChangePage = (e, newPage) => {
 		setPage(newPage);
 	};
-	//================================================================
 
 	const clickHandler = () => {
 		setPage(1);
@@ -113,7 +111,6 @@ function App() {
 									<MainTable
 										isLoading={isLoading}
 										characters={propsCondition()}
-										className="someClassName"
 									/>
 								) : (
 									<CardView characters={propsCondition()} isLoading={isLoading} />

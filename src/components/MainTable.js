@@ -19,7 +19,7 @@ import ModalCard from './ModalCard';
 export default function MainTable(props) {
 	const columns = ['name', 'origin', 'status', 'species', 'gender'];
 
-	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', trIsOpen: false });
+	const [tableRowOpen, setTableRowOpen] = useState({ trId: '', isOpen: false });
 
 	const tableHeaderFormat = () => {
 		if (!props.isLoading && props.characters) {
@@ -41,17 +41,12 @@ export default function MainTable(props) {
 				return (
 					<TableRow
 						hover
-						role="checkbox"
-						tabIndex={-1}
 						key={character.id}
 						onClick={() => setTableRowOpen({ trId: character.id, isOpen: true })}>
 						{columns.map((column, i) => {
 							const value = character[column];
 							return (
-								<TableCell
-									key={i.toString()}
-									align="center"
-									style={{ padding: '0px' }}>
+								<TableCell key={i} align="center" style={{ padding: '0px' }}>
 									{tableRowOpen.trId === character.id ? (
 										<ModalCard
 											data={character}
@@ -86,7 +81,6 @@ export default function MainTable(props) {
 		}
 	};
 
-	//memo
 	const tableView = () => {
 		return (
 			<TableContainer sx={{ height: '93vh' }}>

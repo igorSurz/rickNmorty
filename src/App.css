@@ -1,8 +1,15 @@
 * {
 	text-align: center;
+
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
 }
 
-.someClassName {
+*::-webkit-scrollbar {
+	display: none;
+}
+
+.rNmBgrnd {
 	background: url(./assets/img/rnmbgd.svg) no-repeat center top;
 }
 

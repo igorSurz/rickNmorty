@@ -1,18 +1,20 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { Context } from '../context/Context';
+import { NavLink } from 'react-router-dom';
 import { DebounceInput } from 'react-debounce-input';
-
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import Input from '@mui/material/Input';
-import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import AppsIcon from '@mui/icons-material/Apps';
-
-import { Context } from '../context/Context';
 import {
+	ListItem,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
+	Input,
+	Divider,
+	List,
+	Drawer,
+	Box,
 	Button,
 	FormControl,
 	Grid,
@@ -21,42 +23,29 @@ import {
 	Popover,
 	Typography
 } from '@mui/material';
-import { NavLink } from 'react-router-dom';
 
 export default function NavMenu(props) {
-	const [searchValue, setSearchValue] = useState('');
-	const contextData = useContext(Context);
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [gender, setGender] = useState('');
-	const [status, setStatus] = useState('');
-
-	useEffect(() => {
-		contextData.changeData(searchValue);
-	}, [contextData, searchValue]);
+	const contextData = useContext(Context);
 
 	const toggleDrawer = () => {
 		props.clickProps();
 	};
 
 	const onChangeHandler = e => {
-		setSearchValue(e.target.value);
-		setAnchorEl(e.target);
+		contextData.changeData(e.target.value);
+		if (e.target.value.length > 2) setAnchorEl(e.target);
 	};
 
 	const onGenderChange = e => {
-		setGender(e.target.value);
 		contextData.changeGender(e.target.value);
 	};
 
 	const onStatusChange = e => {
-		setStatus(e.target.value);
 		contextData.changeStatus(e.target.value);
 	};
 
 	const resetHandler = () => {
-		setSearchValue('');
-		setGender('');
-		setStatus('');
 		contextData.changeData('');
 		contextData.changeGender('');
 		contextData.changeStatus('');
@@ -100,7 +89,7 @@ export default function NavMenu(props) {
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
 									Gender
 								</InputLabel>
-								<NativeSelect value={gender} onChange={onGenderChange}>
+								<NativeSelect value={contextData.gender} onChange={onGenderChange}>
 									<option aria-label="None" value="" />
 									<option value="female">Female</option>
 									<option value="male">Male</option>
@@ -116,7 +105,7 @@ export default function NavMenu(props) {
 								<InputLabel variant="standard" htmlFor="uncontrolled-native">
 									Status
 								</InputLabel>
-								<NativeSelect value={status} onChange={onStatusChange}>
+								<NativeSelect value={contextData.status} onChange={onStatusChange}>
 									<option aria-label="None" value="" />
 
 									<option value="alive">Alive</option>
@@ -152,15 +141,14 @@ export default function NavMenu(props) {
 	};
 
 	const onClosePopover = () => {
-		contextData.changeError(null);
-		setSearchValue('');
+		contextData.changeData('');
 	};
 
 	const searchRender = () => {
 		return (
 			<>
 				<DebounceInput
-					value={searchValue}
+					value={contextData.searchData}
 					placeholder="Search Character"
 					element={Input}
 					minLength={2}
@@ -171,7 +159,7 @@ export default function NavMenu(props) {
 					id="simple-popover"
 					disableAutoFocus={true}
 					disableEnforceFocus={true}
-					open={Boolean(contextData.error)}
+					open={!!contextData.error && !!contextData.searchData}
 					onClose={onClosePopover}
 					anchorEl={anchorEl}
 					anchorOrigin={{

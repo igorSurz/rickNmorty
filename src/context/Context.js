@@ -5,7 +5,7 @@ export const Context = createContext({
 	error: '',
 	gender: '',
 	status: '',
-	view: 'table',
+	view: '',
 	changeError: () => {},
 	changeData: () => {},
 	changeGender: () => {},

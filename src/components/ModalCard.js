@@ -1,22 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { styled, Box } from '@mui/system';
-import ModalUnstyled from '@mui/base/ModalUnstyled';
-import {
-	Card,
-	CardActionArea,
-	CardContent,
-	CardMedia,
-	ClickAwayListener,
-	Typography
-} from '@mui/material';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { styled } from '@mui/system';
+import ModalUnstyled from '@mui/base/ModalUnstyled';
+
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 const StyledModal = styled(ModalUnstyled)`
 	position: fixed;
 	z-index: 1300;
 	right: 0;
 	bottom: 0;
-	top: 0;
+	top: 50px;
 	left: 0;
 	display: flex;
 	align-items: center;
@@ -24,7 +18,6 @@ const StyledModal = styled(ModalUnstyled)`
 `;
 
 const modal = {
-	height: 500,
 	width: 400,
 	boxShadow: 5
 };
@@ -37,33 +30,33 @@ const Backdrop = styled('div')`
 	top: 0;
 	left: 0;
 	background-color: rgba(0, 0, 0, 0.2);
-	-webkit-tap-highlight-color: transparent;
 `;
 
 export default function ModalCard(props) {
 	const [episodes, setEpisodes] = useState('');
 	const [loading, setLoading] = useState(false);
 
-	const fetchEpisodes = useCallback(async linkArr => {
-		try {
-			const { data } = await axios.get(linkArr);
-
-			setEpisodes(prevState => [...prevState, data.episode]);
-		} catch (e) {}
-	}, []);
-
 	useEffect(() => {
-		let first = props.data.episode;
-		let link = first[first.length - 1];
+		let propEpisodes = props.data.episode;
+		let lastEpisode = propEpisodes[propEpisodes.length - 1];
 
-		fetchEpisodes(props.data.episode[0]);
-		if (props.data.episode.length > 1) {
-			fetchEpisodes(link);
-		}
+		const fetchEpisodes = async episode => {
+			try {
+				const { data } = await axios.get(episode);
+
+				setEpisodes(prevState => [...prevState, data.episode]);
+			} catch (e) {}
+		};
+
+		fetchEpisodes(propEpisodes[0]);
+
+		if (propEpisodes.length > 1) fetchEpisodes(lastEpisode);
+
 		setLoading(true);
-	}, [fetchEpisodes, props.data.episode]);
+	}, [props.data.episode]);
 
-	const handleClose = () => {
+	const handleClose = e => {
+		e.stopPropagation();
 		props.changeOpen();
 	};
 
@@ -83,39 +76,33 @@ export default function ModalCard(props) {
 
 	return (
 		<div>
-			<ClickAwayListener onClickAway={handleClose}>
-				<StyledModal
-					className="someClassName"
-					aria-labelledby="unstyled-modal-title"
-					aria-describedby="unstyled-modal-description"
-					BackdropComponent={Backdrop}
-					open={props.isOpen}>
-					<Box>
-						<Card sx={modal}>
-							<CardActionArea>
-								<CardMedia
-									component="img"
-									height="350"
-									image={props.data.image}
-									alt={props.data.name}
-								/>
+			<StyledModal
+				disableAutoFocus
+				className="rNmBgrnd"
+				aria-labelledby="unstyled-modal-title"
+				aria-describedby="unstyled-modal-description"
+				onClick={handleClose}
+				onClose={handleClose}
+				BackdropComponent={Backdrop}
+				open={props.isOpen}>
+				<Card sx={modal}>
+					<CardMedia
+						component="img"
+						height="350"
+						image={props.data.image}
+						alt={props.data.name}
+					/>
 
-								<CardContent>
-									<Typography gutterBottom variant="h5" component="div">
-										{props.data.name}
-									</Typography>
-									<Typography
-										component={'span'}
-										variant="body2"
-										color="text.secondary">
-										{cardFooterFormat()}
-									</Typography>
-								</CardContent>
-							</CardActionArea>
-						</Card>
-					</Box>
-				</StyledModal>
-			</ClickAwayListener>
+					<CardContent>
+						<Typography gutterBottom variant="h5" component="div">
+							{props.data.name}
+						</Typography>
+						<Typography component={'span'} variant="body2" color="text.secondary">
+							{cardFooterFormat()}
+						</Typography>
+					</CardContent>
+				</Card>
+			</StyledModal>
 		</div>
 	);
 }
