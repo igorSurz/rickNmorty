@@ -22,8 +22,6 @@ function App() {
 	const { searchData, changeError, gender, status, view } = useContext(Context);
 
 	const [show, setShow] = useState(false);
-
-	// =================================================================
 	const [isLoading, setIsLoading] = useState(true);
 	const [pageCount, setPageCount] = useState(1);
 	const [allChars, setAllChars] = useState('');
